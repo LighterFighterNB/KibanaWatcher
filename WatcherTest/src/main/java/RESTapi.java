@@ -17,16 +17,18 @@ import java.util.Map;
 
 public class RESTapi
 {
-    public static void main(String []Args) throws IOException
+    public static void main(String[] Args) throws IOException
     {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
                 new UsernamePasswordCredentials("Eric", "password"));
 
         RestClientBuilder builder = RestClient.builder(new HttpHost("bc2e0fb1ddbf540185dc508598e610d7.eu-west-1.aws.found.io", 9243, "https"))
-                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback()
+                {
                     @Override
-                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder)
+                    {
                         return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                     }
                 });
@@ -36,7 +38,7 @@ public class RESTapi
 
         Map<String, String> params = Collections.emptyMap();
 
-        String trigger ="";
+        String trigger = "";
 
         String jsonString = "{\n" +
                 "  \"trigger\": {\n" +
@@ -87,7 +89,7 @@ public class RESTapi
         HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
 
         //Response response = restClient.performRequest("PUT", endpointWatcher+"my-watch",params, entity);
-        Response response = restClient.performRequest("PUT",endpointWatcher+"my-watch/_deactivate");
+        Response response = restClient.performRequest("PUT", endpointWatcher + "my-watch/_deactivate");
 
     }
 }

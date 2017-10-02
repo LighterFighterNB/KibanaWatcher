@@ -1,12 +1,10 @@
-import java.io.*;
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
 
 public class APITest
 {
-    public static void main(String[]Args)throws IOException
+    public static void main(String[] Args) throws IOException
     {
-
-
         ProcessBuilder pb = new ProcessBuilder(
                 "curl",
                 "-XGET",

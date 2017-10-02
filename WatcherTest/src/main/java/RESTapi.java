@@ -89,7 +89,9 @@ public class RESTapi
         HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
 
         //Response response = restClient.performRequest("PUT", endpointWatcher+"my-watch",params, entity);
-        Response response = restClient.performRequest("PUT", endpointWatcher + "my-watch/_deactivate");
+        Response response = restClient.performRequest("PUT", endpointWatcher + "my-watch/_activate");
+
+        restClient.close();
 
     }
 }

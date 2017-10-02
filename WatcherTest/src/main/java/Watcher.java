@@ -1,11 +1,15 @@
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.xpack.XPackClient;
 import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 import org.elasticsearch.xpack.watcher.client.WatcherClient;
 import org.elasticsearch.xpack.watcher.support.xcontent.XContentSource;
+import org.elasticsearch.xpack.watcher.transport.actions.delete.DeleteWatchResponse;
+import org.elasticsearch.xpack.watcher.transport.actions.execute.ExecuteWatchRequest;
 import org.elasticsearch.xpack.watcher.transport.actions.get.GetWatchResponse;
+import org.elasticsearch.xpack.watcher.watch.Watch;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,18 +24,20 @@ public class Watcher
         String region = "eu-west-1"; // Your region here
         boolean enableSsl = true;
 
-        String hostname = clusterId + "." + region + ".aws.found.io";
+        String hostname =clusterId + "." + region + ".aws.found.io";
     // Instantiate a TransportClient and add the cluster to the list of addresses to connect to.
     // Only port 9343 (SSL-encrypted) is currently supported.
 
         TransportClient client;
         client = new PreBuiltXPackTransportClient(Settings.builder()
                 .put("cluster.name", clusterId)
-                .put("network.bind_host", 0)
-                .put("xpack.security.user", "Eric:password")
+                .put("node.name","test")
                 .put("xpack.security.transport.ssl.enabled", "true")
+                .put("xpack.security.user", "Eric:password")
                 .build());
         client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(hostname), 9243));
+
+        System.out.println(client.connectedNodes());
 
 
         char[]pass = new char[8];
@@ -43,15 +49,15 @@ public class Watcher
         pass[5]= 'o';
         pass[6]= 'r';
         pass[7]= 'd';
-        XPackClient xpackClient = new XPackClient(client).withAuth("Eric", pass);
+        XPackClient xpackClient = new XPackClient(client);
         WatcherClient watcherClient = xpackClient.watcher();
 
         GetWatchResponse getWatchResponse = watcherClient.prepareGetWatch("my-watch").get();
+        boolean active = getWatchResponse.getStatus().state().isActive();
 
-        XContentSource source = getWatchResponse.getSource();
+        /*ActivateWatchResponse activateResponse = watcherClient.prepareActivateWatch("my-watch", true).get();
+boolean active = activateResponse.getStatus().state().isActive();*/
 
-        List host = source.getAsList();
-
-        System.out.println(host.get(0));
+        System.out.println(active);
     }
 }

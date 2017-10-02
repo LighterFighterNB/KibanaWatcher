@@ -90,6 +90,9 @@ public class RESTapi
 
         //Response response = restClient.performRequest("PUT", endpointWatcher+"my-watch",params, entity);
         Response response = restClient.performRequest("PUT", endpointWatcher + "my-watch/_activate");
+        response = restClient.performRequest("");
+
+        response.getHeader("found");
 
         restClient.close();
 

@@ -1,3 +1,4 @@
+import com.unboundid.util.json.JSONException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -7,7 +8,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
-import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class RESTapi
 {
-    public static void main(String[] Args) throws IOException
+    public static void main(String[] Args) throws IOException, JSONException
     {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
@@ -34,6 +34,7 @@ public class RESTapi
                 });
 
         RestClient restClient = builder.build();
+
         String endpointWatcher = "/_xpack/watcher/watch/";
 
         Map<String, String> params = Collections.emptyMap();
@@ -88,13 +89,17 @@ public class RESTapi
 
         HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
 
+        //Response response = restClient.performRequest("GET", "/.watches/_search");
         //Response response = restClient.performRequest("PUT", endpointWatcher+"my-watch",params, entity);
-        Response response = restClient.performRequest("PUT", endpointWatcher + "my-watch/_activate");
-        response = restClient.performRequest("");
+        //Response response = restClient.performRequest("GET",endpointWatcher+"my-watch");
 
-        response.getHeader("found");
+
+        //JSONObject myObject = new JSONObject(json);
+
+
+        System.out.println();
+        //System.out.println(myObject.getField());
 
         restClient.close();
-
     }
 }

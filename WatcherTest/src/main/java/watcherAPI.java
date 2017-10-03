@@ -12,7 +12,6 @@ public class watcherAPI
     private JButton deactivateButton;
     private JList watchIDList;
     private JList watchActiveList;
-    private JButton executeButton;
 
     private WatcherClient watcherClient;
     private Response response;
@@ -52,23 +51,6 @@ public class watcherAPI
                     {
                         watcherClient.createRequest("PUT",watchIDList.getSelectedValue()+"/_deactivate");
                         setListData();
-                    } catch (IOException e1)
-                    {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        });
-        executeButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if(!watchIDList.isSelectionEmpty())
-                {
-                    try
-                    {
-                        watcherClient.createRequest("POST",watchIDList.getSelectedValue()+"/_execute");
                     } catch (IOException e1)
                     {
                         e1.printStackTrace();

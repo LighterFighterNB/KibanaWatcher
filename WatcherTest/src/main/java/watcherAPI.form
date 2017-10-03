@@ -45,17 +45,6 @@
           <text value="Deactivate"/>
         </properties>
       </component>
-      <component id="41409" class="javax.swing.JButton" binding="executeButton">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <actionCommand value="Execute"/>
-          <label value="Execute"/>
-          <name value="Execute"/>
-          <text value="Execute"/>
-        </properties>
-      </component>
     </children>
   </grid>
 </form>

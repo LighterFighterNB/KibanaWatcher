@@ -1,9 +1,4 @@
-import org.elasticsearch.client.Response;
-
-import static javax.swing.text.html.HTML.Tag.HEAD;
 import com.unboundid.util.json.JSONException;
-
-import java.io.BufferedReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -13,15 +8,15 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Map;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 public class RESTapi
 {
@@ -32,9 +27,11 @@ public class RESTapi
                 new UsernamePasswordCredentials("Eric", "password"));
 
         RestClientBuilder builder = RestClient.builder(new HttpHost("bc2e0fb1ddbf540185dc508598e610d7.eu-west-1.aws.found.io", 9243, "https"))
-                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback()
+                {
                     @Override
-                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder)
+                    {
                         return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                     }
                 });
@@ -100,20 +97,22 @@ public class RESTapi
 
         //JSONObject myObject = new JSONObject(json);
 
-        Response getRequest = restClient.performRequest("GET", endpointWatcher + "my-watch");
+        //Response getRequest = restClient.performRequest("GET", endpointWatcher + "my-watch");
         // get the data from the watcher
-        JSONObject myobject = new JSONObject(EntityUtils.toString(getRequest.getEntity()));
+        //JSONObject myobject = new JSONObject(EntityUtils.toString(getRequest.getEntity()));
         // converts data from watcher to object
-        setInterval(myobject, "2h");
+        //setInterval(myobject, "9h");
         // changes the interval of the watcher
-        updateWatcher(myobject, restClient, endpointWatcher+"my-watch", params);
+        //updateWatcher(myobject, restClient, endpointWatcher + "my-watch", params);
         // updates the watcher
+        activateWatcher(restClient, endpointWatcher + "my-watch");
         restClient.close();
 
     }
 
-    public static void updateWatcher(JSONObject JSON, RestClient restClient, String endpoint, Map<String, String> params) throws IOException {
-        
+    public static void updateWatcher(JSONObject JSON, RestClient restClient, String endpoint, Map<String, String> params) throws IOException
+    {
+
         JSON = JSON.getJSONObject("watch");
         String trigger = JSON.getJSONObject("trigger").toString();
         String input = JSON.getJSONObject("input").toString();
@@ -134,11 +133,22 @@ public class RESTapi
 
         restClient.close();
     }
-    
-    public static void setInterval(JSONObject JSON, String interval) {
-        
+
+    public static void setInterval(JSONObject JSON, String interval)
+    {
+
         JSONObject schedule = JSON.getJSONObject("watch").getJSONObject("trigger").getJSONObject("schedule");
         schedule.put("interval", interval);
-        
+
+    }
+
+    public static void activateWatcher(RestClient restClient, String endpoint) throws IOException
+    {
+        Response response = restClient.performRequest("PUT", endpoint + "/_activate");
+    }
+
+    public static void deactivateWatcher(RestClient restClient, String endpoint) throws IOException
+    {
+        Response response = restClient.performRequest("PUT", endpoint + "/_deactivate");
     }
 }

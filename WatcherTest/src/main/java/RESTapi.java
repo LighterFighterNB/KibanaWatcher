@@ -21,6 +21,8 @@ public class RESTapi
 
         watcherAPI watcherAPI = new watcherAPI();
 
+        watcherAPI.runDisplay();
+
         RestClient restClient = watcherClient.getRestClient();
 
         String endpointWatcher = "/_xpack/watcher/watch/";

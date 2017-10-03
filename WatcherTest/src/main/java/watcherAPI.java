@@ -60,7 +60,13 @@ public class watcherAPI
         });
     }
 
-    public static void main(String[] args) throws IOException
+    public void setListData() throws IOException
+    {
+        watchIDList.setListData(watcherClient.getWatchIDs().keySet().toArray());
+        watchActiveList.setListData(watcherClient.getWatchIDs().values().toArray());
+    }
+
+    public void runDisplay() throws IOException
     {
         JFrame frame = new JFrame("watcherAPI");
         frame.setContentPane(new watcherAPI().watcherAPIPanel);
@@ -68,12 +74,4 @@ public class watcherAPI
         frame.pack();
         frame.setVisible(true);
     }
-
-    public void setListData() throws IOException
-    {
-        watchIDList.setListData(watcherClient.getWatchIDs().keySet().toArray());
-        watchActiveList.setListData(watcherClient.getWatchIDs().values().toArray());
-    }
-
-
 }

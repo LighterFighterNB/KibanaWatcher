@@ -1,3 +1,4 @@
+
 import com.unboundid.util.json.JSONException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -13,6 +14,7 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -105,7 +107,8 @@ public class RESTapi
         // changes the interval of the watcher
         //updateWatcher(myobject, restClient, endpointWatcher + "my-watch", params);
         // updates the watcher
-        activateWatcher(restClient, endpointWatcher + "my-watch");
+        //activateWatcher(restClient, endpointWatcher + "my-watch");
+        getWatches(restClient, params);
         restClient.close();
 
     }
@@ -151,4 +154,23 @@ public class RESTapi
     {
         Response response = restClient.performRequest("PUT", endpoint + "/_deactivate");
     }
+    
+    public static void getWatches(RestClient restClient, Map<String, String> params) throws IOException 
+    {
+        String jsonString = " {"
+                + " \"query\" : "
+                + "{\"match_all\" : { }"
+                + " }"
+                + "} "; 
+        String endpoint = "/.watches/_search";
+        HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
+        Response response = restClient.performRequest("GET", endpoint, params, entity);
+        JSONObject myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
+        JSONArray watches = myobject.getJSONObject("hits").getJSONArray("hits");
+        for (int i = 0; i < watches.length(); i++) {
+            JSONObject watch = watches.getJSONObject(i);
+            System.out.println(watch.get("_id").toString());
+        }
+    }
 }
+

@@ -19,6 +19,8 @@ public class RESTapi
     {
         WatcherClient watcherClient = new WatcherClient("bc2e0fb1ddbf540185dc508598e610d7", "eu-west-1", 9243, "https", "Eric", "password");
 
+        watcherAPI watcherAPI = new watcherAPI();
+
         RestClient restClient = watcherClient.getRestClient();
 
         String endpointWatcher = "/_xpack/watcher/watch/";

@@ -1,17 +1,10 @@
 import com.unboundid.util.json.JSONException;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -22,21 +15,9 @@ public class RESTapi
 {
     public static void main(String[] Args) throws IOException, JSONException
     {
-        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials("Eric", "password"));
+        WatcherClient watcherClient = new WatcherClient("bc2e0fb1ddbf540185dc508598e610d7", "eu-west-1", 9243, "https", "Eric", "password");
 
-        RestClientBuilder builder = RestClient.builder(new HttpHost("bc2e0fb1ddbf540185dc508598e610d7.eu-west-1.aws.found.io", 9243, "https"))
-                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback()
-                {
-                    @Override
-                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder)
-                    {
-                        return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                    }
-                });
-
-        RestClient restClient = builder.build();
+        RestClient restClient = watcherClient.getRestClient();
 
         String endpointWatcher = "/_xpack/watcher/watch/";
 
@@ -107,6 +88,7 @@ public class RESTapi
         // updates the watcher
         activateWatcher(restClient, endpointWatcher + "my-watch");
         restClient.close();
+        watcherClient.closeClient();
 
     }
 

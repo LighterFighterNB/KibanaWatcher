@@ -1,0 +1,7 @@
+<root>
+    <item name='org.elasticsearch.client.RestClient RestClient(org.apache.http.impl.nio.client.CloseableHttpAsyncClient, long, org.apache.http.Header[], org.apache.http.HttpHost[], java.lang.String, org.elasticsearch.client.RestClient.FailureListener)'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+</root>

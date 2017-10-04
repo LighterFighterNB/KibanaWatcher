@@ -15,7 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WatcherClient
 {
@@ -72,12 +74,12 @@ public class WatcherClient
 
     public void createRequest(String method, String endpoint) throws IOException
     {
-        response = restClient.performRequest(method,endpointWatcher+endpoint);
+        response = restClient.performRequest(method, endpointWatcher + endpoint);
     }
 
-    public Map<String,String> getWatchIDs() throws IOException
+    public Map<String, String> getWatchIDs() throws IOException
     {
-        HashMap<String,String> stringMap = new HashMap<>();
+        HashMap<String, String> stringMap = new HashMap<>();
         String field = "";
         String id = "";
         String jsonString = " {"
@@ -90,19 +92,19 @@ public class WatcherClient
         Response response = restClient.performRequest("GET", endpoint, params, entity);
         JSONObject myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
         JSONArray watches = myobject.getJSONObject("hits").getJSONArray("hits");
-        for (int i = 0; i < watches.length(); i++) {
+        for (int i = 0; i < watches.length(); i++)
+        {
             JSONObject watch = watches.getJSONObject(i);
             JSONObject status = watch.getJSONObject("_source").getJSONObject("_status").getJSONObject("state");
             id = watch.get("_id").toString();
-            if((boolean)status.get("active"))
+            if ((boolean) status.get("active"))
             {
-                field="active";
-            }
-            else
+                field = "active";
+            } else
             {
-                field="deactivated";
+                field = "deactivated";
             }
-            stringMap.put(id,field);
+            stringMap.put(id, field);
         }
         return stringMap;
     }

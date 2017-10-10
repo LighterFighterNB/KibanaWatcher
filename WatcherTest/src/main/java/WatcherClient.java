@@ -15,8 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class WatcherClient
@@ -77,11 +77,9 @@ public class WatcherClient
         response = restClient.performRequest(method, endpointWatcher + endpoint);
     }
 
-    public Map<String, String> getWatchIDs() throws IOException
+
+    public JSONArray getWatchObjects() throws IOException
     {
-        HashMap<String, String> stringMap = new HashMap<>();
-        String field = "";
-        String id = "";
         String jsonString = " {"
                 + " \"query\" : "
                 + "{\"match_all\" : { }"
@@ -92,11 +90,34 @@ public class WatcherClient
         Response response = restClient.performRequest("GET", endpoint, params, entity);
         JSONObject myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
         JSONArray watches = myobject.getJSONObject("hits").getJSONArray("hits");
+
+        return watches;
+    }
+
+    public Object[] getWatchIDArray() throws IOException
+    {
+        ArrayList<String> idArray = new ArrayList<>();
+        JSONArray watches = getWatchObjects();
+
+        for (int i = 0; i < watches.length(); i++)
+        {
+            JSONObject watch = watches.getJSONObject(i);
+            idArray.add(watch.get("_id").toString());
+        }
+        return idArray.toArray();
+    }
+
+    public Object[] getWatchState() throws IOException
+    {
+        ArrayList<String> state = new ArrayList<>();
+        String field = "";
+        JSONArray watches = getWatchObjects();
+
         for (int i = 0; i < watches.length(); i++)
         {
             JSONObject watch = watches.getJSONObject(i);
             JSONObject status = watch.getJSONObject("_source").getJSONObject("_status").getJSONObject("state");
-            id = watch.get("_id").toString();
+
             if ((boolean) status.get("active"))
             {
                 field = "active";
@@ -104,8 +125,44 @@ public class WatcherClient
             {
                 field = "deactivated";
             }
-            stringMap.put(id, field);
+            state.add(field);
         }
-        return stringMap;
+
+        return state.toArray();
+    }
+
+    public Object[] getWatchAckno() throws IOException
+    {
+        ArrayList<String> ack = new ArrayList<>();
+        JSONArray watches = getWatchObjects();
+        System.out.println(watches.length());
+
+        for (int i = 0; i < watches.length(); i++)
+        {
+            JSONObject watch = watches.getJSONObject(i);
+            JSONObject actions = watch.getJSONObject("_source").getJSONObject("_status").getJSONObject("actions");
+
+            Map log = actions.toMap();
+            Object[] set = log.keySet().toArray();
+
+            JSONObject logs = actions.getJSONObject(set[0].toString()).getJSONObject("ack");
+
+            String ackable = logs.get("state").toString();
+            System.out.println(ackable);
+            if (ackable.equals("awaits_successful_execution"))
+            {
+                ack.add("Waiting");
+            } else if (ackable.equals("ackable"))
+            {
+                ack.add("Can be acknowledged");
+            } else if (ackable.equals("acked"))
+            {
+                ack.add("Acknowledged");
+            } else
+            {
+                ack.add("Not really working");
+            }
+        }
+        return ack.toArray();
     }
 }

@@ -20,7 +20,7 @@ public class watcherAPI
 
     watcherAPI() throws IOException
     {
-        watcherClient = new WatcherClient("bc2e0fb1ddbf540185dc508598e610d7", "eu-west-1", 9243, "https", "Eric", "password");
+        watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
         setListDate();
         activateButton.addActionListener(new ActionListener()
         {

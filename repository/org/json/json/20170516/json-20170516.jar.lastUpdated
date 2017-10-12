@@ -1,0 +1,7 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Tue Oct 03 08:46:35 CEST 2017
+https\://artifacts.elastic.co/maven/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1507013195538
+https\://artifacts.elastic.co/maven/.lastUpdated=1507013194310
+http\://0.0.0.0\:8081/repository/elasticsearch/.error=Could not transfer artifact org.json\:json\:jar\:20170516 from/to local-nexus (http\://0.0.0.0\:8081/repository/elasticsearch/)\: Connect to 0.0.0.0\:8081 [/0.0.0.0] failed\: Connection refused\: connect
+@default-local-nexus-http\://0.0.0.0\:8081/repository/elasticsearch/.lastUpdated=1507013195362

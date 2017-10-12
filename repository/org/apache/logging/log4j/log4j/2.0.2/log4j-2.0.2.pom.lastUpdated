@@ -1,0 +1,7 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Sep 28 16:22:56 CEST 2017
+https\://artifacts.elastic.co/maven/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1506608576308
+https\://artifacts.elastic.co/maven/.lastUpdated=1506608575173
+http\://0.0.0.0\:8081/repository/elasticsearch/.error=Could not transfer artifact org.apache.logging.log4j\:log4j\:pom\:2.0.2 from/to local-nexus (http\://0.0.0.0\:8081/repository/elasticsearch/)\: Connect to 0.0.0.0\:8081 [/0.0.0.0] failed\: Connection refused\: connect
+@default-local-nexus-http\://0.0.0.0\:8081/repository/elasticsearch/.lastUpdated=1506608576190

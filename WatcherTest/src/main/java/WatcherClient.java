@@ -77,6 +77,11 @@ public class WatcherClient
         response = restClient.performRequest(method, endpointWatcher + endpoint);
     }
 
+    public void createParmRequest(String method, String endpoint, HttpEntity entity) throws IOException
+    {
+        response = restClient.performRequest(method, endpointWatcher + endpoint, params, entity);
+    }
+
 
     public JSONArray getWatchObjects() throws IOException
     {

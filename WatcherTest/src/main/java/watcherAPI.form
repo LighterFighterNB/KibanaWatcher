@@ -16,6 +16,7 @@
         </constraints>
         <properties>
           <name value="Activate"/>
+          <toolTipText value=""/>
         </properties>
         <border type="none"/>
         <children>
@@ -36,7 +37,7 @@
                 <properties>
                   <model/>
                   <name value="Watcher List"/>
-                  <selectionMode value="0"/>
+                  <selectionMode value="2"/>
                   <valueIsAdjusting value="false"/>
                 </properties>
               </component>
@@ -45,6 +46,8 @@
                   <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <enabled value="true"/>
+                  <opaque value="true"/>
                   <selectionMode value="0"/>
                 </properties>
               </component>
@@ -85,16 +88,6 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="18aca" class="javax.swing.JList" binding="ackWatchIDList">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <selectionMode value="0"/>
-                </properties>
-              </component>
               <component id="423c0" class="javax.swing.JList" binding="ackAcknowledgements">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -102,7 +95,8 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <enabled value="true"/>
+                  <enabled value="false"/>
+                  <opaque value="true"/>
                   <selectionMode value="0"/>
                 </properties>
               </component>
@@ -113,6 +107,77 @@
                 <properties>
                   <label value="Acknowledge"/>
                   <text value="Acknowledge"/>
+                </properties>
+              </component>
+              <component id="18aca" class="javax.swing.JList" binding="ackWatchIDList">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <selectionMode value="2"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="5cb62" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title="Upload"/>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="d6ce3" class="javax.swing.JTextField" binding="watcherLocation">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="94a43" class="javax.swing.JTextField" binding="watcherName">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="677a4" class="javax.swing.JButton" binding="watcherSubmit">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <label value="Submit"/>
+                  <text value="Submit"/>
+                </properties>
+              </component>
+              <component id="abc75" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Watcher name:"/>
+                </properties>
+              </component>
+              <component id="11304" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Watcher location:"/>
+                </properties>
+              </component>
+              <component id="d2c53" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="This tab is used to create new Watches by uploading completed JSON files"/>
                 </properties>
               </component>
             </children>

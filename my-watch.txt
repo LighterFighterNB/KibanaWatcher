@@ -1,0 +1,46 @@
+{
+  "trigger":
+ {
+    "schedule":
+ {
+      "interval": "10s"
+    } },
+  "input": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "shakes*"
+        ],
+        "types": [],
+        "body": {
+          "size": 10,
+          "query": {
+            "bool": {
+              "must": {
+                "match": {
+                  "play_name": "Henry IV"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 0
+      }
+    }
+  },
+  "actions": {
+    "log": {
+      "logging": {
+        "level": "info",
+        "text": "my-watch is firing, please acknowledge"
+      }
+    }
+  }
+}

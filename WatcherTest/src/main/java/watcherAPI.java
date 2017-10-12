@@ -1,3 +1,6 @@
+import org.apache.http.HttpEntity;
+import org.json.simple.parser.ParseException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -5,7 +8,11 @@ import java.io.IOException;
 
 public class watcherAPI
 {
+    private JFrame frame;
     private JPanel watcherAPIPanel;
+    private JMenuBar menuBar;
+    private JMenu menu;
+    private JMenuItem menuItem;
     private JButton activateButton;
     private JButton deactivateButton;
     private JList<Object> actWatchList;
@@ -15,28 +22,57 @@ public class watcherAPI
     private JList<Object> ackAcknowledgements;
     private JButton ackButton;
     private JList<Object> ackWatchIDList;
+    private JTextField watcherLocation;
+    private JButton watcherSubmit;
+    private JTextField watcherName;
 
     private WatcherClient watcherClient;
+    private JSON json;
 
     watcherAPI() throws IOException
     {
+        json = new JSON();
         watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
-        setListDate();
+        setListData();
         activateButton.addActionListener(new ActionListener()
         {
-            @Override
             public void actionPerformed(ActionEvent e)
             {
                 if (!actWatchList.isSelectionEmpty())
                 {
-                    try
+                    System.out.println(actWatchList.getSelectedIndices().length);
+                    if (actWatchList.getSelectedIndices().length > 1)
                     {
-                        watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_activate");
-                        setActivateListData();
+                        int[] indexes = actWatchList.getSelectedIndices();
+                        for (int i = 0; i < indexes.length; i++)
+                        {
+                            try
+                            {
+                                actWatchList.setSelectedIndex(indexes[i]);
+                                watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_activate");
+                            } catch (IOException e1)
+                            {
+                                e1.printStackTrace();
+                            }
+                        }
+                        try
+                        {
+                            setActivateListData();
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    } else
+                    {
+                        try
+                        {
+                            watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_activate");
+                            setActivateListData();
 
-                    } catch (IOException e1)
-                    {
-                        e1.printStackTrace();
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
                     }
                 }
             }
@@ -48,28 +84,39 @@ public class watcherAPI
             {
                 if (!actWatchList.isSelectionEmpty())
                 {
-                    try
+                    System.out.println(actWatchList.getSelectedIndices().length);
+                    if (actWatchList.getSelectedIndices().length > 1)
                     {
-                        watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_deactivate");
-                        setActivateListData();
-                    } catch (IOException e1)
+                        int[] indexes = actWatchList.getSelectedIndices();
+                        for (int i = 0; i < indexes.length; i++)
+                        {
+                            try
+                            {
+                                actWatchList.setSelectedIndex(indexes[i]);
+                                watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_deactivate");
+                            } catch (IOException e1)
+                            {
+                                e1.printStackTrace();
+                            }
+                        }
+                        try
+                        {
+                            setActivateListData();
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    } else
                     {
-                        e1.printStackTrace();
+                        try
+                        {
+                            watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_deactivate");
+                            setActivateListData();
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
                     }
-                }
-            }
-        });
-        refreshButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try
-                {
-                    setListDate();
-                } catch (IOException e1)
-                {
-                    e1.printStackTrace();
                 }
             }
         });
@@ -80,12 +127,81 @@ public class watcherAPI
             {
                 if (!ackWatchIDList.isSelectionEmpty())
                 {
+                    System.out.println(ackWatchIDList.getSelectedIndices().length);
+                    if (ackWatchIDList.getSelectedIndices().length > 1)
+                    {
+                        int[] indexes = ackWatchIDList.getSelectedIndices();
+                        for (int i = 0; i < indexes.length; i++)
+                        {
+                            try
+                            {
+                                ackWatchIDList.setSelectedIndex(indexes[i]);
+                                watcherClient.createRequest("PUT", ackWatchIDList.getSelectedValue() + "/_ack");
+                            } catch (IOException e1)
+                            {
+                                e1.printStackTrace();
+                            }
+                        }
+                        try
+                        {
+                            setActivateListData();
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    } else
+                    {
+                        try
+                        {
+                            System.out.println(ackWatchIDList.getSelectedValue());
+                            watcherClient.createRequest("PUT", ackWatchIDList.getSelectedValue() + "/_ack");
+                        } catch (IOException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+                try
+                {
+                    setListData();
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        refreshButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try
+                {
+                    setListData();
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        watcherSubmit.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (!watcherLocation.getText().equals(""))
+                {
                     try
                     {
-                        System.out.println(ackWatchIDList.getSelectedValue());
-                        watcherClient.createRequest("PUT", ackWatchIDList.getSelectedValue() + "/_ack");
-                        setAckPanel();
+                        HttpEntity watcher = json.parse(watcherLocation.getText());
+                        watcherClient.createParmRequest("POST", watcherName.getText(), watcher);
+                        watcherLocation.setText("");
+                        watcherName.setText("");
+                        setListData();
                     } catch (IOException e1)
+                    {
+                        e1.printStackTrace();
+                    } catch (ParseException e1)
                     {
                         e1.printStackTrace();
                     }
@@ -98,6 +214,7 @@ public class watcherAPI
     {
         actWatchList.setListData(watcherClient.getWatchIDArray());
         actWatchActiveList.setListData(watcherClient.getWatchState());
+        actWatchActiveList.setEnabled(false);
     }
 
     private void setAckPanel() throws IOException
@@ -106,7 +223,7 @@ public class watcherAPI
         ackAcknowledgements.setListData(watcherClient.getWatchAckno());
     }
 
-    private void setListDate() throws IOException
+    private void setListData() throws IOException
     {
         setActivateListData();
         setAckPanel();

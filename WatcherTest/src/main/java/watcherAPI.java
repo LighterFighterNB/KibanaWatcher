@@ -1,9 +1,11 @@
 import org.apache.http.HttpEntity;
-import org.json.simple.parser.ParseException;
+import org.apache.http.ParseException;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class watcherAPI
@@ -18,13 +20,21 @@ public class watcherAPI
     private JList<Object> actWatchList;
     private JList<Object> actWatchActiveList;
     private JButton refreshButton;
-    private JTabbedPane tabbedPane1;
+    private JTabbedPane tabbedPanel;
     private JList<Object> ackAcknowledgements;
     private JButton ackButton;
     private JList<Object> ackWatchIDList;
     private JTextField watcherLocation;
     private JButton watcherSubmit;
     private JTextField watcherName;
+    private JLabel watchNameLabel;
+    private JLabel watchLocaLabel;
+    private JButton editButton;
+    private JTextField timeField;
+    private JButton editSubmitButton;
+    private JPanel editTab;
+    private JTextField watcherNameTextField;
+    private JPanel ActiveTab;
 
     private WatcherClient watcherClient;
     private JSON json;
@@ -189,7 +199,7 @@ public class watcherAPI
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (!watcherLocation.getText().equals(""))
+                if (!watcherLocation.getText().equals("") && !watcherName.getText().equals(""))
                 {
                     try
                     {
@@ -204,7 +214,43 @@ public class watcherAPI
                     } catch (ParseException e1)
                     {
                         e1.printStackTrace();
+                    } catch (org.json.simple.parser.ParseException e1)
+                    {
+                        e1.printStackTrace();
                     }
+
+                }
+            }
+        });
+        editButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (!actWatchList.isSelectionEmpty())
+                {
+                    editTab.setEnabled(true);
+                    tabbedPanel.setSelectedComponent(editTab);
+                    String watcherID = actWatchList.getSelectedValue().toString();
+
+                    watcherNameTextField.setText(watcherID);
+                    timeField.setText(watcherClient.getWatchInterval(watcherID));
+                }
+            }
+        });
+        editSubmitButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try
+                {
+                    watcherClient.setInterval(watcherNameTextField.getText(), timeField.getText());
+                    tabbedPanel.setSelectedComponent(ActiveTab);
+                    setListData();
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -235,6 +281,21 @@ public class watcherAPI
         JFrame frame = new JFrame("watcherAPI");
         frame.setContentPane(new watcherAPI().watcherAPIPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                super.windowClosing(e);
+                try
+                {
+                    watcherClient.closeClient();
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        });
         frame.pack();
         frame.setVisible(true);
     }

@@ -27,13 +27,15 @@ public class WatcherClient
     private Response response;
     private String endpointWatcher = "/_xpack/watcher/watch/";
     private Map<String, String> params = Collections.emptyMap();
+    private JSONArray watches;
 
-    public WatcherClient(String hostname, String region, int port, String scheme, String username, String password)
+    public WatcherClient(String hostname, String region, int port, String scheme, String username, String password) throws IOException
     {
         response = null;
         credentialsProvider = new BasicCredentialsProvider();
         restClientBuilder = getRestClientBuilder(hostname, region, port, scheme, username, password);
         restClient = restClientBuilder.build();
+        watches = getWatchObjects();
     }
 
     public CredentialsProvider getCredentails(String username, String password)
@@ -102,7 +104,6 @@ public class WatcherClient
     public Object[] getWatchIDArray() throws IOException
     {
         ArrayList<String> idArray = new ArrayList<>();
-        JSONArray watches = getWatchObjects();
 
         for (int i = 0; i < watches.length(); i++)
         {
@@ -116,7 +117,7 @@ public class WatcherClient
     {
         ArrayList<String> state = new ArrayList<>();
         String field = "";
-        JSONArray watches = getWatchObjects();
+        refreshWatches();
 
         for (int i = 0; i < watches.length(); i++)
         {
@@ -139,7 +140,7 @@ public class WatcherClient
     public Object[] getWatchAckno() throws IOException
     {
         ArrayList<String> ack = new ArrayList<>();
-        JSONArray watches = getWatchObjects();
+        refreshWatches();
         System.out.println(watches.length());
 
         for (int i = 0; i < watches.length(); i++)
@@ -169,5 +170,54 @@ public class WatcherClient
             }
         }
         return ack.toArray();
+    }
+
+    public JSONObject getWatch(String name)
+    {
+        JSONObject watch = new JSONObject();
+
+        for (int i = 0; i < watches.length(); i++)
+        {
+            JSONObject temp = watches.getJSONObject(i);
+            if (temp.get("_id").toString().equals(name))
+            {
+                watch = temp;
+            }
+        }
+
+        return watch;
+    }
+
+    public String getWatchInterval(String watchID)
+    {
+        return getWatch(watchID).getJSONObject("_source").getJSONObject("trigger").getJSONObject("schedule").get("interval").toString();
+    }
+
+
+    public void refreshWatches() throws IOException
+    {
+        watches = getWatchObjects();
+    }
+
+    public void setInterval(String watchID, String interval) throws IOException
+    {
+        JSONObject watch = getWatch(watchID);
+
+        JSONObject schedule = watch.getJSONObject("_source").getJSONObject("trigger").getJSONObject("schedule");
+        schedule.put("interval", interval);
+
+        watch = watch.getJSONObject("_source");
+        String trigger = watch.getJSONObject("trigger").toString();
+        String input = watch.getJSONObject("input").toString();
+        String condition = watch.getJSONObject("condition").toString();
+        String actions = watch.getJSONObject("actions").toString();
+        String jsonString = "{\n"
+                + "  \"trigger\":" + trigger + ",\n"
+                + "  \"input\":" + input + ",\n"
+                + "  \"condition\":" + condition + ",\n"
+                + "  \"actions\":" + actions + "}";
+
+        HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
+        createParmRequest("PUT", watchID, entity);
     }
 }

@@ -87,16 +87,20 @@ public class WatcherClient
 
     public JSONArray getWatchObjects() throws IOException
     {
-        String jsonString = " {"
-                + " \"query\" : "
-                + "{\"match_all\" : { }"
-                + " }"
-                + "} ";
         String endpoint = "/.watches/_search";
-        HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
-        Response response = restClient.performRequest("GET", endpoint, params, entity);
+        Response response = restClient.performRequest("GET", endpoint);
         JSONObject myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
+        String size = myobject.getJSONObject("hits").get("total").toString();
+
+        String jsonString = " {"
+                + " \"size\" : "+size+"}";
+        HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
+        response = restClient.performRequest("GET", endpoint,params,entity);
+        myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
+
         JSONArray watches = myobject.getJSONObject("hits").getJSONArray("hits");
+
+        System.out.println(watches.length());
 
         return watches;
     }
@@ -111,6 +115,14 @@ public class WatcherClient
             idArray.add(watch.get("_id").toString());
         }
         return idArray.toArray();
+    }
+
+    public int getHits()
+    {
+        int hits = 0;
+
+
+        return hits;
     }
 
     public Object[] getWatchState() throws IOException

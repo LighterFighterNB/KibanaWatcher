@@ -35,6 +35,7 @@ public class watcherAPI
     private JPanel editTab;
     private JTextField watcherNameTextField;
     private JPanel ActiveTab;
+    private JComboBox comboBox1;
 
     private WatcherClient watcherClient;
     private JSON json;
@@ -203,7 +204,7 @@ public class watcherAPI
                 {
                     try
                     {
-                        HttpEntity watcher = json.parse(watcherLocation.getText());
+                        HttpEntity watcher = json.HttpParse(watcherLocation.getText());
                         watcherClient.createParmRequest("POST", watcherName.getText(), watcher);
                         watcherLocation.setText("");
                         watcherName.setText("");
@@ -258,7 +259,9 @@ public class watcherAPI
 
     private void setActivateListData() throws IOException
     {
+        actWatchList.setVisibleRowCount(watcherClient.getWatchIDArray().length);
         actWatchList.setListData(watcherClient.getWatchIDArray());
+        actWatchActiveList.setVisibleRowCount(watcherClient.getWatchIDArray().length);
         actWatchActiveList.setListData(watcherClient.getWatchState());
         actWatchActiveList.setEnabled(false);
     }

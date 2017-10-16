@@ -23,10 +23,9 @@ public class JSON
         entity = null;
     }
 
-    public HttpEntity parse(String location) throws IOException, ParseException
+    public HttpEntity HttpParse(String location) throws IOException, ParseException
     {
         jsonFile = parser.parse(new FileReader(location));
-
         jsonObject = (JSONObject) jsonFile;
         entity = new NStringEntity(jsonObject.toString(), ContentType.APPLICATION_JSON);
         return entity;

@@ -36,10 +36,13 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <autoscrolls value="true"/>
+                  <doubleBuffered value="false"/>
                   <model/>
                   <name value="Watcher List"/>
                   <selectionMode value="2"/>
                   <valueIsAdjusting value="false"/>
+                  <visibleRowCount value="20"/>
                 </properties>
               </component>
               <component id="7969a" class="javax.swing.JList" binding="actWatchActiveList">
@@ -190,7 +193,7 @@
               <tabbedpane title="Edit" enabled="false"/>
             </constraints>
             <properties>
-              <visible value="false"/>
+              <visible value="true"/>
             </properties>
             <border type="none"/>
             <children>
@@ -210,17 +213,6 @@
                   <text value="Name"/>
                 </properties>
               </component>
-              <component id="d36c7" class="javax.swing.JTextField" binding="watcherNameTextField">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <editable value="false"/>
-                  <text value="test"/>
-                </properties>
-              </component>
               <component id="fb92" class="javax.swing.JTextField" binding="timeField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
@@ -238,6 +230,12 @@
                 <properties>
                   <text value="Time interval"/>
                 </properties>
+              </component>
+              <component id="f0be0" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
               </component>
             </children>
           </grid>

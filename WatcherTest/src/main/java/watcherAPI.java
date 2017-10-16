@@ -35,7 +35,7 @@ public class watcherAPI
     private JPanel editTab;
     private JTextField watcherNameTextField;
     private JPanel ActiveTab;
-    private JComboBox comboBox1;
+    private JComboBox watcherIDComboBox;
 
     private WatcherClient watcherClient;
     private JSON json;
@@ -45,6 +45,7 @@ public class watcherAPI
         json = new JSON();
         watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
         setListData();
+
         activateButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -223,22 +224,6 @@ public class watcherAPI
                 }
             }
         });
-        editButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (!actWatchList.isSelectionEmpty())
-                {
-                    editTab.setEnabled(true);
-                    tabbedPanel.setSelectedComponent(editTab);
-                    String watcherID = actWatchList.getSelectedValue().toString();
-
-                    watcherNameTextField.setText(watcherID);
-                    timeField.setText(watcherClient.getWatchInterval(watcherID));
-                }
-            }
-        });
         editSubmitButton.addActionListener(new ActionListener()
         {
             @Override
@@ -246,7 +231,7 @@ public class watcherAPI
             {
                 try
                 {
-                    watcherClient.setInterval(watcherNameTextField.getText(), timeField.getText());
+                    watcherClient.setInterval(watcherIDComboBox.getSelectedItem().toString(), timeField.getText());
                     tabbedPanel.setSelectedComponent(ActiveTab);
                     setListData();
                 } catch (IOException e1)
@@ -255,6 +240,16 @@ public class watcherAPI
                 }
             }
         });
+        watcherIDComboBox.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                timeField.setText(watcherClient.getWatchInterval(watcherIDComboBox.getSelectedItem().toString()));
+            }
+        });
+
+        watcherIDComboBox.setSelectedIndex(0);
     }
 
     private void setActivateListData() throws IOException
@@ -272,10 +267,20 @@ public class watcherAPI
         ackAcknowledgements.setListData(watcherClient.getWatchAckno());
     }
 
+    private void setWatcherIDComboBox() throws IOException
+    {
+        Object[] idArray = watcherClient.getWatchIDArray();
+        for(int i=0;i<idArray.length;i++)
+        {
+            watcherIDComboBox.addItem(idArray[i].toString());
+        }
+    }
+
     private void setListData() throws IOException
     {
         setActivateListData();
         setAckPanel();
+        setWatcherIDComboBox();
     }
 
 

@@ -5,7 +5,6 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
@@ -48,14 +47,7 @@ public class WatcherClient
     public RestClientBuilder getRestClientBuilder(String hostname, String region, int port, String scheme, final String username, final String password)
     {
         restClientBuilder = RestClient.builder(new HttpHost(hostname + "." + region + ".aws.found.io", port, scheme))
-                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback()
-                {
-                    @Override
-                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder)
-                    {
-                        return httpClientBuilder.setDefaultCredentialsProvider(getCredentails(username, password));
-                    }
-                });
+                .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(getCredentails(username, password)));
         return restClientBuilder;
     }
 
@@ -93,14 +85,13 @@ public class WatcherClient
         String size = myobject.getJSONObject("hits").get("total").toString();
 
         String jsonString = " {"
-                + " \"size\" : "+size+"}";
+                + " \"size\" : " + size + "}";
         HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
-        response = restClient.performRequest("GET", endpoint,params,entity);
+        response = restClient.performRequest("GET", endpoint, params, entity);
         myobject = new JSONObject(EntityUtils.toString(response.getEntity()));
 
         JSONArray watches = myobject.getJSONObject("hits").getJSONArray("hits");
 
-        System.out.println(watches.length());
 
         return watches;
     }
@@ -117,19 +108,11 @@ public class WatcherClient
         return idArray.toArray();
     }
 
-    public int getHits()
-    {
-        int hits = 0;
-
-
-        return hits;
-    }
 
     public Object[] getWatchState() throws IOException
     {
         ArrayList<String> state = new ArrayList<>();
         String field = "";
-        refreshWatches();
 
         for (int i = 0; i < watches.length(); i++)
         {
@@ -152,7 +135,6 @@ public class WatcherClient
     public Object[] getWatchAckno() throws IOException
     {
         ArrayList<String> ack = new ArrayList<>();
-        refreshWatches();
         System.out.println(watches.length());
 
         for (int i = 0; i < watches.length(); i++)

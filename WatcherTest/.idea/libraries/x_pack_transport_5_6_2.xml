@@ -1,8 +1,6 @@
 <component name="libraryTable">
   <library name="x-pack-transport-5.6.2">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../x-pack-transport-5.6.2.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES />
   </library>

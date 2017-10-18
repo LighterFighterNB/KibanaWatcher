@@ -44,6 +44,7 @@ public class watcherAPI
     {
         json = new JSON();
         watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
+        actWatchActiveList.setCellRenderer(new CellRenderer());
         setListData();
 
         activateButton.addActionListener(new ActionListener()
@@ -69,7 +70,7 @@ public class watcherAPI
                         }
                         try
                         {
-                            setActivateListData();
+                            setListData();
                         } catch (IOException e1)
                         {
                             e1.printStackTrace();
@@ -79,7 +80,7 @@ public class watcherAPI
                         try
                         {
                             watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_activate");
-                            setActivateListData();
+                            setListData();
 
                         } catch (IOException e1)
                         {
@@ -113,7 +114,7 @@ public class watcherAPI
                         }
                         try
                         {
-                            setActivateListData();
+                            setListData();
                         } catch (IOException e1)
                         {
                             e1.printStackTrace();
@@ -123,7 +124,7 @@ public class watcherAPI
                         try
                         {
                             watcherClient.createRequest("PUT", actWatchList.getSelectedValue() + "/_deactivate");
-                            setActivateListData();
+                            setListData();
                         } catch (IOException e1)
                         {
                             e1.printStackTrace();
@@ -156,7 +157,7 @@ public class watcherAPI
                         }
                         try
                         {
-                            setActivateListData();
+                            setListData();
                         } catch (IOException e1)
                         {
                             e1.printStackTrace();
@@ -167,6 +168,7 @@ public class watcherAPI
                         {
                             System.out.println(ackWatchIDList.getSelectedValue());
                             watcherClient.createRequest("PUT", ackWatchIDList.getSelectedValue() + "/_ack");
+
                         } catch (IOException e1)
                         {
                             e1.printStackTrace();
@@ -258,7 +260,6 @@ public class watcherAPI
         actWatchList.setListData(watcherClient.getWatchIDArray());
         actWatchActiveList.setVisibleRowCount(watcherClient.getWatchIDArray().length);
         actWatchActiveList.setListData(watcherClient.getWatchState());
-        actWatchActiveList.setEnabled(false);
     }
 
     private void setAckPanel() throws IOException
@@ -270,7 +271,7 @@ public class watcherAPI
     private void setWatcherIDComboBox() throws IOException
     {
         Object[] idArray = watcherClient.getWatchIDArray();
-        for(int i=0;i<idArray.length;i++)
+        for (int i = 0; i < idArray.length; i++)
         {
             watcherIDComboBox.addItem(idArray[i].toString());
         }
@@ -278,6 +279,7 @@ public class watcherAPI
 
     private void setListData() throws IOException
     {
+        watcherClient.refreshWatches();
         setActivateListData();
         setAckPanel();
         setWatcherIDComboBox();

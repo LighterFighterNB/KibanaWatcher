@@ -51,6 +51,7 @@
                 </constraints>
                 <properties>
                   <enabled value="true"/>
+                  <inheritsPopupMenu value="false"/>
                   <opaque value="true"/>
                   <selectionMode value="0"/>
                 </properties>

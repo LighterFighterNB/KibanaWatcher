@@ -9,26 +9,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 
 public class RESTapi
 {
     public static void main(String[] Args) throws IOException, JSONException
     {
-       // WatcherClient watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
+        // WatcherClient watcherClient = new WatcherClient("a8cfaa58af43b19a22f137ff349c9c2d", "eu-west-1", 9243, "https", "admin", "admin01");
 
         watcherAPI watcherAPI = new watcherAPI();
 
         watcherAPI.runDisplay();
-
         //RestClient restClient = watcherClient.getRestClient();
 
-       // String endpointWatcher = "/_xpack/watcher/watch/";
+        // String endpointWatcher = "/_xpack/watcher/watch/";
 
-       // Map<String, String> params = Collections.emptyMap();
+        // Map<String, String> params = Collections.emptyMap();
 
-       // String trigger = "";
+        // String trigger = "";
 
         /*String jsonString = "{\n"
                 + "  \"trigger\": {\n"
